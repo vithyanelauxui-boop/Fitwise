@@ -417,6 +417,15 @@ footer.ft{margin-top:64px;background:var(--soft);border-top:1px solid var(--line
 .ft .pay{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
 .ft .pay span{height:28px;padding:0 10px;border-radius:6px;background:#fff;box-shadow:inset 0 0 0 1px var(--line);display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;color:var(--ink-2)}
 .ft .pay span svg{flex:none}
+/* real payment marks, optically matched: wide wordmarks shorter, the Mastercard circles taller */
+.ft .pay .pm{padding:0 11px}
+.ft .pay .pm img{display:block;width:auto;flex:none}
+.ft a.logo{display:inline-flex} /* the footer's link rule had stacked the mark over the wordmark */
+.ft .pay{flex-direction:column;align-items:flex-start;gap:8px}
+.ft .pay .r{display:flex;flex-wrap:wrap;gap:8px}
+.ft .pay .pt{gap:6px;padding:0 11px 0 9px;font-size:12px;font-weight:600}
+.ft .pay .pt .lucide{width:15px;height:15px;color:var(--ink-2)}
+.ft .pay .upi{height:12px}.ft .pay .rupay{height:12px}.ft .pay .visa{height:11px}.ft .pay .mc{height:17px}
 .ft .base{display:flex;justify-content:space-between;margin-top:32px;padding-top:18px;border-top:1px solid var(--line);color:var(--ink-3);font-size:12px;gap:16px;flex-wrap:wrap}
 
 /* ---------- product card ---------- */
@@ -430,6 +439,12 @@ footer.ft{margin-top:64px;background:var(--soft);border-top:1px solid var(--line
 /* Airbnb "Guest favourite" pill: soft white gradient, floating shadow, ink text, one emoji */
 .gbadge{display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 10px 0 8px;border-radius:40px;background:linear-gradient(163deg,#fff 17%,#F5F5F5 83%);box-shadow:0 4px 10px rgba(0,0,0,.16),0 0 0 1px rgba(0,0,0,.04);font-size:12.5px;font-weight:600;color:var(--ink);white-space:nowrap;letter-spacing:-.005em}
 .gbadge .lucide{width:14px;height:14px}
+.gbadge.top{background:var(--ink);color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.24)}
+.gbadge .gb-s{display:none}
+@container (max-width: 210px){ .pc .gbadge .gb-l{display:none} .pc .gbadge .gb-s{display:inline} }
+.pc .im{container-type:inline-size}
+.pc .rt .toprated{display:inline-flex;align-items:center;gap:6px;color:var(--ink);font-weight:600}
+.pc .rt .toprated::before{content:"";width:3px;height:3px;border-radius:50%;background:var(--ink-4)}
 .main-im .gbadge{height:30px;font-size:13.5px;padding:0 12px 0 10px}
 .main-im .gbadge .lucide{width:16px;height:16px}
 .pc .wish{position:absolute;right:10px;top:10px;width:32px;height:32px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:var(--sh-1);color:var(--ink-2);transition:.15s}
@@ -497,7 +512,7 @@ footer.ft{margin-top:64px;background:var(--soft);border-top:1px solid var(--line
 .askv .opts{display:flex;gap:6px;flex-wrap:wrap}
 .opts .btn.on{background:var(--sun);color:#fff;box-shadow:none}
 .plp{display:grid;grid-template-columns:240px minmax(0,1fr);gap:36px;margin-top:24px;align-items:start}
-.filters{position:sticky;top:136px;max-height:calc(100vh - 152px);overflow:auto;scrollbar-width:thin;padding-right:6px}
+.filters{position:sticky;top:calc(var(--hdr,120px) + 16px);max-height:calc(100vh - var(--hdr,120px) - 32px);overflow:auto;scrollbar-width:thin;padding-right:6px}
 .filters .fh{display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--line)}
 .filters .fh b{font-size:15px;font-weight:700}
 .fg{border-bottom:1px solid var(--line);padding:14px 0;position:relative}
@@ -611,7 +626,7 @@ footer.ft{margin-top:64px;background:var(--soft);border-top:1px solid var(--line
 
 /* ---------- PDP ---------- */
 .pdp{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);gap:44px;margin-top:16px;align-items:start}
-.gal{display:grid;grid-template-columns:76px minmax(0,1fr);gap:12px;position:sticky;top:136px}
+.gal{display:grid;grid-template-columns:76px minmax(0,1fr);gap:12px;position:sticky;top:calc(var(--hdr,120px) + 16px)}
 .thumbs{display:flex;flex-direction:column;gap:8px}
 .thumbs button{width:76px;height:76px;border-radius:10px;background:#fff;box-shadow:inset 0 0 0 1px var(--line);overflow:hidden;display:grid;place-items:center;transition:.15s;position:relative}
 .thumbs button img{width:82%;height:82%;object-fit:contain}
@@ -704,16 +719,16 @@ footer.ft{margin-top:64px;background:var(--soft);border-top:1px solid var(--line
 .askrow small{display:block;color:var(--ink-3);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .askrow>.lucide{width:16px;height:16px;color:var(--ink-3);flex:none}
 
-.subnav{position:sticky;top:118px;z-index:20;background:#fff;border-bottom:1px solid var(--line);margin-top:52px}
+.subnav{position:sticky;top:var(--hdr,120px);z-index:20;background:#fff;border-bottom:1px solid var(--line);margin-top:52px}
 .subnav .in{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
 .subnav a{height:48px;display:flex;align-items:center;padding:0 14px;font-weight:600;color:var(--ink-3);position:relative;white-space:nowrap}
 .subnav a.on,.subnav a:hover{color:var(--ink)}
 .subnav a.on::after{content:"";position:absolute;left:14px;right:14px;bottom:-1px;height:2px;background:var(--ink)}
-.psec{padding-top:40px;scroll-margin-top:180px}
+.psec{padding-top:40px;scroll-margin-top:calc(var(--hdr,120px) + 60px)}
 .psec>h2{font-size:21px;font-weight:700;letter-spacing:-.02em}
 .psec>p.s{color:var(--ink-3);margin:4px 0 16px}
 .stores{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:16px;align-items:start}
-.stores .mapbox{min-height:540px;position:sticky;top:186px}
+.stores .mapbox{min-height:540px;position:sticky;top:calc(var(--hdr,120px) + 66px)}
 .slist{display:flex;flex-direction:column;gap:8px}
 /* store card: two lines by default, the rest only for the selected store */
 .scard{border-radius:14px;background:#fff;box-shadow:inset 0 0 0 1px var(--line);transition:box-shadow .15s}
@@ -764,7 +779,7 @@ footer.ft{margin-top:64px;background:var(--soft);border-top:1px solid var(--line
 .store .pr small{color:var(--ink-3);font-size:12px}
 .store .acts{grid-column:1/-1;display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;align-items:center}
 .store .acts .sp{flex:1}
-.fbt{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:20px;border-radius:var(--r-lg);box-shadow:inset 0 0 0 1px var(--line)}
+.fbt{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;padding:20px;border-radius:var(--r-lg);box-shadow:inset 0 0 0 1px var(--line)}
 .fbt .it{width:160px;font-size:12.5px}
 .fbt .it .im{height:120px;border-radius:12px;background:var(--tile);display:grid;place-items:center;margin-bottom:8px;overflow:hidden}
 .fbt .it .im img{width:78%;height:78%;object-fit:contain}
@@ -773,8 +788,8 @@ footer.ft{margin-top:64px;background:var(--soft);border-top:1px solid var(--line
 .fbt .it label input{margin-top:3px;accent-color:var(--ink)}
 .fbt .it b{font-weight:500;display:block}
 .fbt .it strong{font-weight:700}
-.fbt .plus{color:var(--ink-3)}
-.fbt .tot{margin-left:auto;padding-left:24px;border-left:1px solid var(--line)}
+.fbt .plus{color:var(--ink-3);height:120px;display:grid;place-items:center;flex:none} /* centred on the images, not on image + caption */
+.fbt .tot{align-self:center;margin-left:auto;padding-left:24px;border-left:1px solid var(--line)}
 .fbt .tot small{color:var(--ink-3)}
 .fbt .tot b{font-size:24px;font-weight:800;display:block;letter-spacing:-.02em;margin-bottom:10px}
 .specs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -917,14 +932,33 @@ footer.ft{margin-top:64px;background:var(--soft);border-top:1px solid var(--line
 .slots-t button.on{background:var(--sun);color:#fff;box-shadow:none}
 .slots-t button:disabled{opacity:.35;text-decoration:line-through;cursor:not-allowed}
 .slider{position:relative;height:56px;border-radius:14px;background:var(--sun);overflow:hidden;user-select:none;touch-action:none}
-.slider .lbl{position:absolute;inset:0;display:grid;place-items:center;font-weight:700}
-.slider .lbl{color:#fff}.slider .fill{position:absolute;left:0;top:0;bottom:0;width:56px;background:var(--sun-2);border-radius:14px}
+.slider .lbl{position:absolute;inset:0;display:grid;place-items:center;font-weight:700;padding-left:40px}
+.slider .lbl span{background:linear-gradient(100deg,rgba(255,255,255,.5) 30%,#fff 50%,rgba(255,255,255,.5) 70%) 0 0/250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:slShine 2.6s linear infinite}
+@keyframes slShine{from{background-position:100% 0}to{background-position:-150% 0}}
+.slider.drag .lbl span{animation-play-state:paused}
+.slider.done .lbl{transition:opacity .2s var(--ease),clip-path .2s var(--ease)}
+.slider.ok .knob,.slider.ok .fill{transition-duration:.14s}
+.slider .knob:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.slider.ok .knob{color:var(--fit);animation:pop .35s var(--spring)}.slider .fill{position:absolute;left:0;top:0;bottom:0;width:56px;background:var(--sun-2);border-radius:14px}
 .slider .knob{position:absolute;left:4px;top:4px;width:48px;height:48px;border-radius:11px;background:#fff;color:var(--sun);display:grid;place-items:center;cursor:grab;box-shadow:0 2px 8px rgba(0,0,0,.25)}
 .slider.done .knob,.slider.done .fill{transition:.3s var(--ease)}
 .done-st{text-align:center;padding:24px 8px;display:none;flex-direction:column;align-items:center;gap:8px}
-.done-st.on{display:flex;animation:fadeUp .4s var(--ease)}
-.done-st .ck{width:68px;height:68px;border-radius:50%;background:var(--fit);color:#fff;display:grid;place-items:center;animation:pop .5s var(--spring)}
-.done-st .ck .lucide{width:34px;height:34px;stroke-width:2.5}
+.done-st.on{display:flex}
+/* success: the ring draws, the disc pops, the tick strokes in, a burst, then the details rise in turn */
+.done-st .ck-anim{position:relative;width:76px;height:76px;margin-bottom:4px}
+.ck-anim svg{position:relative;width:76px;height:76px;overflow:visible}
+.ck-anim .ring{fill:none;stroke:var(--fit);stroke-width:3;stroke-linecap:round;stroke-dasharray:208;stroke-dashoffset:208;transform:rotate(-90deg);transform-origin:center;animation:ckDraw .32s var(--ease) forwards}
+.ck-anim .disc{fill:var(--fit);transform:scale(0);transform-origin:center;animation:ckFill .3s var(--spring) .24s forwards}
+.ck-anim .tick{fill:none;stroke:#fff;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:42;stroke-dashoffset:42;animation:ckDraw .24s var(--ease) .4s forwards}
+.ck-anim .burst i{position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:var(--fit);opacity:0;animation:ckBurst .55s var(--ease) .32s forwards}
+.ck-anim .burst i:nth-child(3n){background:#F5A623;width:5px;height:5px}
+.ck-anim .burst i:nth-child(3n+1){background:var(--ink)}
+@keyframes ckDraw{to{stroke-dashoffset:0}}
+@keyframes ckFill{to{transform:scale(1)}}
+@keyframes ckBurst{0%{opacity:1;transform:rotate(var(--a)) translateY(-30px) scale(1)}100%{opacity:0;transform:rotate(var(--a)) translateY(calc(-30px - var(--d))) scale(.3)}}
+.done-st.on>:not(.ck-anim){opacity:0;animation:fadeUp .3s var(--ease) forwards}
+.done-st.on>:nth-child(2){animation-delay:.3s}.done-st.on>:nth-child(3){animation-delay:.36s}.done-st.on>:nth-child(4){animation-delay:.42s}
+.done-st.on>:nth-child(5){animation-delay:.46s}.done-st.on>:nth-child(6){animation-delay:.5s}.done-st.on>:nth-child(7){animation-delay:.54s}
 @keyframes pop{from{transform:scale(.3);opacity:0}}
 .qr{width:132px;height:132px;padding:10px;border-radius:12px;box-shadow:inset 0 0 0 1px var(--line);margin-top:8px}
 
@@ -1340,7 +1374,6 @@ body.embed .dock,body.embed .util{display:none}
   .thumbs button{width:66px;height:66px;flex:none}
   .stores,.specs,.rv{grid-template-columns:1fr}
   .stores .mapbox{position:relative;top:0;min-height:320px}
-  .subnav{top:112px}
   .mega{display:none}
   .fbt .tot{margin-left:0;padding-left:0;border:0;width:100%}
 }
@@ -1600,12 +1633,16 @@ body.embed .dock,body.embed .util{display:none}
   <div class="wrap">
     <div class="ft-g">
       <div><a class="logo" href="#home" data-go="home"><svg class="mk" viewBox="0 0 100 100"><path d="${LOGO_D}" fill="url(#logoGrad)"/></svg>Vrom</a><p style="margin-top:12px;max-width:290px">Spare parts, tyres and tracks for cars, bikes, trucks, tractors and construction machines. Checked to fit, sold through local stores.</p><div class="pay">
-        <span style="font-weight:800;letter-spacing:.01em;color:#1A1A1A">UPI</span>
-        <span style="font-weight:800;letter-spacing:-.01em"><b style="font-weight:inherit"><em style="font-style:normal;color:#2D2A26">Ru</em><em style="font-style:normal;color:#F58220">Pay</em></b></span>
-        <span style="font-style:italic;font-weight:800;color:#1A1F71;letter-spacing:-.02em">VISA</span>
-        <span><svg viewBox="0 0 24 14" width="22" height="13"><circle cx="9" cy="7" r="7" fill="#EB001B"/><circle cx="15" cy="7" r="7" fill="#F79E1B"/><path d="M12 1.6a7 7 0 0 1 0 10.8 7 7 0 0 1 0-10.8Z" fill="#FF5F00"/></svg></span>
-        <span>EMI</span>
-        <span><svg viewBox="0 0 24 24" width="15" height="15"><rect x="2" y="6" width="20" height="13" rx="2" fill="none" stroke="#6A6A6A" stroke-width="1.6"/><circle cx="12" cy="12.5" r="3" fill="none" stroke="#6A6A6A" stroke-width="1.6"/></svg>Cash at store</span>
+        <div class="r">
+          <span class="pm"><img src="assets/pay/upi.svg" alt="UPI" class="upi"></span>
+          <span class="pm"><img src="assets/pay/rupay.svg" alt="RuPay" class="rupay"></span>
+          <span class="pm"><img src="assets/pay/visa.svg" alt="Visa" class="visa"></span>
+          <span class="pm"><img src="assets/pay/mastercard.svg" alt="Mastercard" class="mc"></span>
+        </div>
+        <div class="r">
+          <span class="pt">${I('calendar-clock')}EMI</span>
+          <span class="pt">${I('indian-rupee')}Cash at store</span>
+        </div>
       </div></div>
       <div><h6>Shop</h6><a href="#">Car parts</a><a href="#">Tyres</a><a href="#">Rubber tracks</a><a href="#">Tractor &amp; farm</a><a href="#">Truck &amp; bus</a></div>
       <div><h6>Help</h6><a href="#">Fitment promise</a><a href="#">Returns</a><a href="#">Track order</a><a href="#">Warranty claims</a></div>
@@ -1760,6 +1797,8 @@ const icons = () => {};
 const params = new URLSearchParams(location.search);
 $('#app').innerHTML = new Function('return `' + $('#shell').textContent + '`')();
 if (params.get('embed')) document.body.classList.add('embed');
+/* sticky bars below the header (section tabs, filters, gallery) follow its real height, which changes with screen width */
+{ const hd = $('header.top'), set = () => document.documentElement.style.setProperty('--hdr', hd.offsetHeight + 'px'); set(); new ResizeObserver(set).observe(hd); }
 
 const S = {
   view: 'home', vehicle: params.get('v') || 'creta', cat: params.get('cat') || 'brakes', pdp: params.get('p') || 'd1',
@@ -2116,10 +2155,21 @@ function fitLine(p) {
   return f === 'ok' ? `<div class="fit">${I('circle-check')}Fits your ${v.short}</div>` : f === 'warn' ? `<div class="fit warn">${I('circle-alert')}Check your variant</div>` : `<div class="fit bad">${I('circle-x')}Doesn't fit your ${v.short}</div>`;
 }
 const specLine = p => p.cat === 'brakes' ? `${p.style} · Ventilated · ${p.tier}` : p.cat === 'tyres' ? `${p.size} · ${p.use}` : `${p.pattern} tread · ${p.core}`;
-/* Airbnb "Guest favourite"-style badge: one per card, the most specific claim wins, emoji + two words. Parts that don't fit get none */
-const TOPSOLD = {}; PRODUCTS.forEach(p => { if (!TOPSOLD[p.cat] || p.reviews > TOPSOLD[p.cat].reviews) TOPSOLD[p.cat] = p; });
-const badgeOf = p => fitOf(p) === 'bad' ? null : p.best ? ['badge-check', 'Best match'] : TOPSOLD[p.cat] === p ? ['shopping-cart', 'Most bought'] : p.rating >= 4.6 ? ['star', 'Driver favourite'] : off(p) >= 20 ? ['badge-percent', 'Great price'] : null;
-const badge = p => { const b = badgeOf(p); return b ? `<span class="gbadge">${I(b[0])}${b[1]}</span>` : ''; };
+/* Badges in three tiers, at most two on the images of any list, each in its own voice:
+   1. a recommendation for YOUR vehicle (solid ink, the one pill that leads),
+   2. proof from other buyers, with a number (quiet white pill),
+   3. a rating fact, said beside the rating it refers to instead of on the photo.
+   Discounts already show in the price, so they get no badge. Parts that don't fit get none. */
+const TOPSOLD = {}, TOPRATED = {};
+PRODUCTS.forEach(p => {
+  if (!TOPSOLD[p.cat] || p.reviews > TOPSOLD[p.cat].reviews) TOPSOLD[p.cat] = p;
+  const r = TOPRATED[p.cat]; if (!r || p.rating > r.rating || (p.rating === r.rating && p.reviews > r.reviews)) TOPRATED[p.cat] = p;
+});
+const kNum = n => n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace(/\.0$/, '') + 'k' : String(n);
+// [icon, full copy, short copy for narrow cards, tier class]
+const badgeOf = p => fitOf(p) === 'bad' ? null : p.best ? ['badge-check', `Best for your ${V().short}`, 'Best fit', 'top'] : TOPSOLD[p.cat] === p ? ['shopping-cart', `Bought by ${kNum(p.reviews)} drivers`, `${kNum(p.reviews)} bought`, ''] : null;
+const badge = p => { const b = badgeOf(p); return b ? `<span class="gbadge ${b[3]}">${I(b[0])}<span class="gb-l">${b[1]}</span><span class="gb-s">${b[2]}</span></span>` : ''; };
+const topRated = p => fitOf(p) !== 'bad' && TOPRATED[p.cat] === p && p.rating >= 4.6 ? `<span class="toprated">Highest rated</span>` : '';
 function cardHTML(p) {
   return `<article class="pc ${fitOf(p) === 'bad' ? 'nofit' : ''}" data-pdp="${p.id}">
     <div class="im">${img(p)}<div class="tl">${badge(p)}</div>
@@ -2130,7 +2180,7 @@ function cardHTML(p) {
       <span class="brand">${p.brand}</span>
       <h3>${p.name}</h3>
       <div class="spec">${specLine(p)}</div>
-      <div class="rt"><span class="rating">${p.rating}${I('star')}</span>${p.reviews.toLocaleString('en-IN')}</div>
+      <div class="rt"><span class="rating">${p.rating}${I('star')}</span>${p.reviews.toLocaleString('en-IN')}${topRated(p)}</div>
       <div class="price"><b>${fmt(p.price)}</b>${off(p) ? `<s>${fmt(p.mrp)}</s><em>${off(p)}% off</em>` : ''}</div>
       ${fitLine(p)}
       <div class="av">${p.dealers ? `${I('store')}Pick up today · ${p.dealers} store${p.dealers > 1 ? 's' : ''}` : `${I('truck')}Delivery ${p.eta.toLowerCase()}`}</div>
@@ -2673,18 +2723,45 @@ function openReserve(p) {
     <div><h5>Store</h5><div class="store on" style="cursor:default"><div class="n"><b>${d.name}</b></div><div class="pr"><small>${d.km} km</small></div><div class="m"><span>${I('map-pin')}${d.area}</span><span class="ok">${d.open}</span></div></div></div>
     <div><h5>${fit ? 'Fitting slot' : 'Pick up by'}, today</h5><div class="slots-t" id="sl">${['3:00 PM', '4:30 PM', '5:30 PM', '6:30 PM', '7:30 PM', 'Tomorrow 10 AM', 'Tomorrow 12 PM', 'Tomorrow 4 PM'].map((s, i) => `<button ${i ? '' : 'disabled'} class="${i === 1 ? 'on' : ''}">${s}</button>`).join('')}</div></div>
     <label class="swl" id="addFit" role="switch" aria-checked="${fit}" tabindex="0" style="justify-content:space-between;padding:12px 14px;border-radius:12px;box-shadow:inset 0 0 0 1px var(--line)"><span><b style="font-weight:600">Get it fitted at the store</b><div class="muted" style="font-weight:400;font-size:12.5px">${lab}</div></span><span class="sw ${fit ? 'on' : ''}"></span></label>
-    <div class="slider" id="slide"><div class="fill" id="sfill"></div><div class="lbl">Slide to reserve</div><div class="knob" id="knob">${I('chevrons-right')}</div></div>
+    <div class="slider" id="slide"><div class="fill" id="sfill"></div><div class="lbl" id="slbl"><span>Slide to reserve</span></div><div class="knob" id="knob" role="button" tabindex="0" aria-label="Slide to reserve, or press Enter">${I('chevrons-right')}</div></div>
   </div>
-  <div class="done-st" id="done"><span class="ck">${I('check')}</span><h3 style="font-size:20px;font-weight:700;margin-top:6px">Reserved at ${d.name}</h3><p class="muted" style="max-width:340px">Show this code at the counter. We've sent it to your WhatsApp with directions.</p><div class="qr">${qrSvg()}</div><b class="mono" style="font-size:18px;letter-spacing:.06em">FW-CBE-48213</b><span class="tag fit">Ready by 4:30 PM · held until 8:30 PM</span><div style="display:flex;gap:8px;margin-top:10px"><button class="btn line sm">${I('navigation')} Directions</button><button class="btn line sm">${I('message-circle')} Message store</button></div></div></div>`);
+  <div class="done-st" id="done"><div class="ck-anim" aria-hidden="true"><span class="burst">${Array.from({ length: 12 }, (_, i) => `<i style="--a:${i * 30}deg;--d:${i % 2 ? 34 : 48}px"></i>`).join('')}</span><svg viewBox="0 0 72 72"><circle class="ring" cx="36" cy="36" r="33"/><circle class="disc" cx="36" cy="36" r="33"/><path class="tick" d="M22 37.5l9.5 9.5L51 27.5"/></svg></div><h3 style="font-size:20px;font-weight:700;margin-top:6px">Reserved at ${d.name}</h3><p class="muted" style="max-width:340px">Show this code at the counter. We've sent it to your WhatsApp with directions.</p><div class="qr">${qrSvg()}</div><b class="mono" style="font-size:18px;letter-spacing:.06em">FW-CBE-48213</b><span class="tag fit">Ready by 4:30 PM · held until 8:30 PM</span><div style="display:flex;gap:8px;margin-top:10px"><button class="btn line sm">${I('navigation')} Directions</button><button class="btn line sm">${I('message-circle')} Message store</button></div></div></div>`);
   $('#sl').onclick = e => { const b = e.target.closest('button'); if (!b || b.disabled) return; $$('#sl button').forEach(x => x.classList.toggle('on', x === b)); };
   $('#addFit').onclick = e => { e.preventDefault(); $('#addFit').setAttribute('aria-checked', $('#addFit .sw').classList.toggle('on')); };
   $('#addFit').onkeydown = e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); $('#addFit').click(); } };
-  const sl = $('#slide'), kn = $('#knob'), fl = $('#sfill'); let x0 = null, max = 0;
-  kn.onpointerdown = e => { x0 = e.clientX; max = sl.offsetWidth - 56; kn.setPointerCapture(e.pointerId); sl.classList.remove('done'); };
-  kn.onpointermove = e => { if (x0 === null) return; const dx = Math.max(0, Math.min(max, e.clientX - x0)); kn.style.left = 4 + dx + 'px'; fl.style.width = 56 + dx + 'px'; };
-  kn.onpointerup = e => { if (x0 === null) return; const dx = e.clientX - x0; x0 = null; sl.classList.add('done');
-    if (dx > max * .85) { kn.style.left = 4 + max + 'px'; fl.style.width = '100%'; setTimeout(() => { $('#rf').style.display = 'none'; $('#done').classList.add('on'); toast('Reserved. Code <span class="mono">FW-CBE-48213</span> sent to WhatsApp'); }, 250); }
-    else { kn.style.left = '4px'; fl.style.width = '56px'; } };
+  const sl = $('#slide'), kn = $('#knob'), fl = $('#sfill'), lb = $('#slbl'), tx = $('#slbl span'); let x0 = null, max = 0, done = false, t0 = 0, tw = 1;
+  // the label stays whole until the knob reaches it, then is wiped and fades as the knob crosses it
+  const at = dx => {
+    const edge = 52 + dx; kn.style.left = 4 + dx + 'px'; fl.style.width = 56 + dx + 'px';
+    lb.style.clipPath = `inset(0 0 0 ${edge}px)`; lb.style.opacity = 1 - Math.min(1, Math.max(0, (edge - t0) / tw));
+  };
+  const finish = () => {
+    if (done) return; done = true; x0 = null; max = max || sl.offsetWidth - 56; sl.classList.add('done', 'ok'); at(max); fl.style.width = '100%';
+    kn.innerHTML = I('check'); navigator.vibrate?.(18);
+    setTimeout(() => { $('#rf').style.display = 'none'; $('#done').classList.add('on'); }, 160); // straight to the success screen, which is the confirmation; no toast on top
+  };
+  // drag tracking: the last position and speed come from the move events (a fast trackpad drag can end with a
+  // stale or cancelled release), and a quick flick completes it even if it stops short of the end
+  let last = 0, lt = 0, vel = 0, pid = null;
+  const release = e => {
+    if (x0 === null) return; x0 = null; pid = null; sl.classList.remove('drag'); sl.classList.add('done');
+    if (e && e.timeStamp - lt > 120) vel = 0;   // held still before letting go: not a flick
+    if (last >= max * .7 || (vel > .9 && last >= max * .3)) finish(); else at(0);
+  };
+  kn.onpointerdown = e => {
+    if (done) return; e.preventDefault(); x0 = e.clientX; pid = e.pointerId; last = 0; vel = 0; lt = e.timeStamp;
+    max = sl.offsetWidth - 56; t0 = tx.offsetLeft; tw = tx.offsetWidth;
+    try { kn.setPointerCapture(e.pointerId); } catch { /* released already */ }
+    sl.classList.remove('done'); sl.classList.add('drag');
+  };
+  kn.onpointermove = e => {
+    if (x0 === null || e.pointerId !== pid) return;
+    const dx = Math.max(0, Math.min(max, e.clientX - x0)), dt = Math.max(1, e.timeStamp - lt);
+    vel = vel * .5 + ((dx - last) / dt) * .5; last = dx; lt = e.timeStamp; at(dx);
+    if (dx >= max) finish();   // reaching the end completes at once, no need to release
+  };
+  kn.onpointerup = release; kn.onpointercancel = release; kn.onlostpointercapture = release;
+  kn.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); finish(); } };
 }
 function qrSvg() {
   let s = ''; for (let y = 0; y < 25; y++) for (let x = 0; x < 25; x++) { if ((x < 8 && y < 8) || (x > 16 && y < 8) || (x < 8 && y > 16)) continue; if ((x * 7 + y * 13 + x * y * 3) % 5 < 2) s += `<rect x="${x}" y="${y}" width="1" height="1"/>`; }
@@ -2697,6 +2774,8 @@ syncGarage();
 const start = (location.hash || '#home').slice(1);
 go(['home', 'plp', 'pdp'].includes(start) ? start : 'home');
 if (params.get('ask')) setTimeout(() => openCopilot(params.get('ask')), 500);
+// ?compare=d1,d6,d2 opens the compare drawer with those products (used by the case study)
+if (params.get('compare')) setTimeout(() => { S.compare = params.get('compare').split(',').filter(id => P(id)).slice(0, 3); go('plp'); renderTray(); if (S.compare.length > 1) openCompare(); }, 600);
 
 
 </script>

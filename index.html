@@ -872,7 +872,7 @@ footer a{color:var(--ink-2)}
         <li><div><b>Help me choose, folded away</b><p>“Which brake disc should I choose?” is an AI answer grounded in the catalogue, collapsed by default so it never pushes products down. A follow-up opens the assistant.</p></div></li>
         <li><div><b>Same template, three catalogues</b><p>Brake discs, tyres and tracks share the layout. Filters change with the category: disc type, tyre size and speed rating, track width × pitch × links. Filters only list values that apply to your vehicle, and the help card changes too: a brake inspection, a free tyre-size check, or an on-site undercarriage check.</p></div></li>
         <li><div><b>Filters that never lead to zero</b><p>Live counts, disabled options that would empty the page, a price histogram, and removable chips for every applied filter.</p><span class="src">Pattern: UI Arc Range histogram slider · Filter toolbar</span></div></li>
-        <li><div><b>Cards built for Indian shoppers</b><p>White product well, brand, two-line name, a key-spec line (Baymard: show the attributes people compare on), green rating badge, price with MRP and discount, “Fits your Creta”, and pick-up availability. One badge at most. Add-to-cart and compare appear over the image on hover, so rows stay tight.</p></div></li>
+        <li><div><b>Cards built for Indian shoppers</b><p>White product well, brand, two-line name, a key-spec line (Baymard: show the attributes people compare on), green rating badge, price with MRP and discount, “Fits your Creta”, and pick-up availability. Badges have a hierarchy: “Best for your Creta” in solid ink leads, “Bought by 1.2k drivers” sits quietly in white, and “Highest rated” is said beside the rating, never more than two on a page of photos. Add-to-cart and compare appear over the image on hover, so rows stay tight.</p></div></li>
         <li><div><b>A list view for garages</b><p>One toggle switches to a dense table: part number, units nearby, trade price, quantity. Same data, different job.</p></div></li>
       </ol>
     </div>
@@ -908,6 +908,32 @@ footer a{color:var(--ink-2)}
       <div><span>Option A · rejected</span><b>A “Fits ✓” badge</b>The common pattern. It asks for trust without giving a reason, and it can't say “probably”.</div>
       <div><span>Option B · rejected</span><b>Fit-check pop-up</b>An extra step and a form before people see the one answer they came for.</div>
       <div class="win"><span>Option C · chosen</span><b>Fit box + contextual AI + local stock</b>The answer and its evidence above the fold, follow-up questions one tap away, then the stores.</div>
+    </div>
+  </div>
+
+  <div class="inset">
+    <h3>Compare <span class="tag">“What's the difference between these?”</span></h3>
+    <div class="screen-intro">
+      <p><b>Goal:</b> choose between two or three parts without leaving the list. The first row answers the question that matters most, whether it fits, and every other row is something that can change the decision.</p>
+      <ul class="qs"><li>Do they all fit my Creta?</li><li>What do I get for the extra money?</li><li>Which is rated best, and who has it today?</li><li>Can I go back to the list where I left it?</li></ul>
+    </div>
+  </div>
+  <div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">vrom.in/brakes/front-discs?compare=bosch,vrom-select,mobis</span><a href="prototype.html?compare=d1,d6,d2#plp" target="_blank" rel="noopener">Open full screen ↗</a></div><div class="vp" data-src="prototype.html?embed=1&amp;compare=d1,d6,d2#plp" data-w="1440" data-h="1000"></div></div>
+  <div class="inset">
+    <div class="screen-row">
+      <ol class="anno">
+        <li><div><b>Pick from the card, up to three</b><p>A Compare tick sits on each product photo (over the image on hover, so the list stays quiet). The fourth choice replaces the oldest, so the tool never says no and never asks you to untick something first.</p></div></li>
+        <li><div><b>A tray that keeps your picks in sight</b><p>Three slots with the product photos float at the bottom of the screen while you browse. “Compare” stays disabled until there are two, and “Clear” starts over. Nothing is lost if you filter or scroll.</p></div></li>
+        <li><div><b>Fit is the first row</b><p>“Fits your vehicle” comes before price: Yes in green, or “Check variant” in amber. A cheaper disc that does not fit is not a saving, so it is settled before anything else is compared.</p></div></li>
+        <li><div><b>The winner of each row is marked</b><p>Lowest price, best rating and most stores with it today are highlighted in their own row. There is no overall score to trust blindly: the shopper sees which one is cheaper, which is better rated, and decides what matters.</p></div></li>
+        <li><div><b>Only rows that can change the choice</b><p>Price, quality tier, type, rating with the number of reviews, warranty and pick-up availability. Specs that are identical across the options (bolt holes, diameter) are left out; they live on the product page.</p></div></li>
+        <li><div><b>A drawer, so the list stays behind it</b><p>Each column ends in “View product”. Closing the drawer returns to the same listing with the same filters and scroll position, which a separate compare page would reset.</p><span class="src">Pattern: UI Arc Drawer</span></div></li>
+      </ol>
+    </div>
+    <div class="iter">
+      <div><span>Option A · rejected</span><b>A compare page</b>Loads a new screen, drops the filters and the scroll position, and makes “back” a gamble.</div>
+      <div><span>Option B · rejected</span><b>A 20-row spec sheet</b>Most rows are identical for parts that fit the same car, so people scroll through noise to find the two that differ.</div>
+      <div class="win"><span>Option C · chosen</span><b>Side-by-side drawer, fit first</b>Seven rows in the order people decide, the best value marked, and the list one tap away.</div>
     </div>
   </div>
 </section>

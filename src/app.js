@@ -7,6 +7,8 @@ const icons = () => {};
 const params = new URLSearchParams(location.search);
 $('#app').innerHTML = new Function('return `' + $('#shell').textContent + '`')();
 if (params.get('embed')) document.body.classList.add('embed');
+/* sticky bars below the header (section tabs, filters, gallery) follow its real height, which changes with screen width */
+{ const hd = $('header.top'), set = () => document.documentElement.style.setProperty('--hdr', hd.offsetHeight + 'px'); set(); new ResizeObserver(set).observe(hd); }
 
 const S = {
   view: 'home', vehicle: params.get('v') || 'creta', cat: params.get('cat') || 'brakes', pdp: params.get('p') || 'd1',
@@ -363,10 +365,21 @@ function fitLine(p) {
   return f === 'ok' ? `<div class="fit">${I('circle-check')}Fits your ${v.short}</div>` : f === 'warn' ? `<div class="fit warn">${I('circle-alert')}Check your variant</div>` : `<div class="fit bad">${I('circle-x')}Doesn't fit your ${v.short}</div>`;
 }
 const specLine = p => p.cat === 'brakes' ? `${p.style} · Ventilated · ${p.tier}` : p.cat === 'tyres' ? `${p.size} · ${p.use}` : `${p.pattern} tread · ${p.core}`;
-/* Airbnb "Guest favourite"-style badge: one per card, the most specific claim wins, emoji + two words. Parts that don't fit get none */
-const TOPSOLD = {}; PRODUCTS.forEach(p => { if (!TOPSOLD[p.cat] || p.reviews > TOPSOLD[p.cat].reviews) TOPSOLD[p.cat] = p; });
-const badgeOf = p => fitOf(p) === 'bad' ? null : p.best ? ['badge-check', 'Best match'] : TOPSOLD[p.cat] === p ? ['shopping-cart', 'Most bought'] : p.rating >= 4.6 ? ['star', 'Driver favourite'] : off(p) >= 20 ? ['badge-percent', 'Great price'] : null;
-const badge = p => { const b = badgeOf(p); return b ? `<span class="gbadge">${I(b[0])}${b[1]}</span>` : ''; };
+/* Badges in three tiers, at most two on the images of any list, each in its own voice:
+   1. a recommendation for YOUR vehicle (solid ink, the one pill that leads),
+   2. proof from other buyers, with a number (quiet white pill),
+   3. a rating fact, said beside the rating it refers to instead of on the photo.
+   Discounts already show in the price, so they get no badge. Parts that don't fit get none. */
+const TOPSOLD = {}, TOPRATED = {};
+PRODUCTS.forEach(p => {
+  if (!TOPSOLD[p.cat] || p.reviews > TOPSOLD[p.cat].reviews) TOPSOLD[p.cat] = p;
+  const r = TOPRATED[p.cat]; if (!r || p.rating > r.rating || (p.rating === r.rating && p.reviews > r.reviews)) TOPRATED[p.cat] = p;
+});
+const kNum = n => n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace(/\.0$/, '') + 'k' : String(n);
+// [icon, full copy, short copy for narrow cards, tier class]
+const badgeOf = p => fitOf(p) === 'bad' ? null : p.best ? ['badge-check', `Best for your ${V().short}`, 'Best fit', 'top'] : TOPSOLD[p.cat] === p ? ['shopping-cart', `Bought by ${kNum(p.reviews)} drivers`, `${kNum(p.reviews)} bought`, ''] : null;
+const badge = p => { const b = badgeOf(p); return b ? `<span class="gbadge ${b[3]}">${I(b[0])}<span class="gb-l">${b[1]}</span><span class="gb-s">${b[2]}</span></span>` : ''; };
+const topRated = p => fitOf(p) !== 'bad' && TOPRATED[p.cat] === p && p.rating >= 4.6 ? `<span class="toprated">Highest rated</span>` : '';
 function cardHTML(p) {
   return `<article class="pc ${fitOf(p) === 'bad' ? 'nofit' : ''}" data-pdp="${p.id}">
     <div class="im">${img(p)}<div class="tl">${badge(p)}</div>
@@ -377,7 +390,7 @@ function cardHTML(p) {
       <span class="brand">${p.brand}</span>
       <h3>${p.name}</h3>
       <div class="spec">${specLine(p)}</div>
-      <div class="rt"><span class="rating">${p.rating}${I('star')}</span>${p.reviews.toLocaleString('en-IN')}</div>
+      <div class="rt"><span class="rating">${p.rating}${I('star')}</span>${p.reviews.toLocaleString('en-IN')}${topRated(p)}</div>
       <div class="price"><b>${fmt(p.price)}</b>${off(p) ? `<s>${fmt(p.mrp)}</s><em>${off(p)}% off</em>` : ''}</div>
       ${fitLine(p)}
       <div class="av">${p.dealers ? `${I('store')}Pick up today · ${p.dealers} store${p.dealers > 1 ? 's' : ''}` : `${I('truck')}Delivery ${p.eta.toLowerCase()}`}</div>
@@ -920,18 +933,45 @@ function openReserve(p) {
     <div><h5>Store</h5><div class="store on" style="cursor:default"><div class="n"><b>${d.name}</b></div><div class="pr"><small>${d.km} km</small></div><div class="m"><span>${I('map-pin')}${d.area}</span><span class="ok">${d.open}</span></div></div></div>
     <div><h5>${fit ? 'Fitting slot' : 'Pick up by'}, today</h5><div class="slots-t" id="sl">${['3:00 PM', '4:30 PM', '5:30 PM', '6:30 PM', '7:30 PM', 'Tomorrow 10 AM', 'Tomorrow 12 PM', 'Tomorrow 4 PM'].map((s, i) => `<button ${i ? '' : 'disabled'} class="${i === 1 ? 'on' : ''}">${s}</button>`).join('')}</div></div>
     <label class="swl" id="addFit" role="switch" aria-checked="${fit}" tabindex="0" style="justify-content:space-between;padding:12px 14px;border-radius:12px;box-shadow:inset 0 0 0 1px var(--line)"><span><b style="font-weight:600">Get it fitted at the store</b><div class="muted" style="font-weight:400;font-size:12.5px">${lab}</div></span><span class="sw ${fit ? 'on' : ''}"></span></label>
-    <div class="slider" id="slide"><div class="fill" id="sfill"></div><div class="lbl">Slide to reserve</div><div class="knob" id="knob">${I('chevrons-right')}</div></div>
+    <div class="slider" id="slide"><div class="fill" id="sfill"></div><div class="lbl" id="slbl"><span>Slide to reserve</span></div><div class="knob" id="knob" role="button" tabindex="0" aria-label="Slide to reserve, or press Enter">${I('chevrons-right')}</div></div>
   </div>
-  <div class="done-st" id="done"><span class="ck">${I('check')}</span><h3 style="font-size:20px;font-weight:700;margin-top:6px">Reserved at ${d.name}</h3><p class="muted" style="max-width:340px">Show this code at the counter. We've sent it to your WhatsApp with directions.</p><div class="qr">${qrSvg()}</div><b class="mono" style="font-size:18px;letter-spacing:.06em">FW-CBE-48213</b><span class="tag fit">Ready by 4:30 PM · held until 8:30 PM</span><div style="display:flex;gap:8px;margin-top:10px"><button class="btn line sm">${I('navigation')} Directions</button><button class="btn line sm">${I('message-circle')} Message store</button></div></div></div>`);
+  <div class="done-st" id="done"><div class="ck-anim" aria-hidden="true"><span class="burst">${Array.from({ length: 12 }, (_, i) => `<i style="--a:${i * 30}deg;--d:${i % 2 ? 34 : 48}px"></i>`).join('')}</span><svg viewBox="0 0 72 72"><circle class="ring" cx="36" cy="36" r="33"/><circle class="disc" cx="36" cy="36" r="33"/><path class="tick" d="M22 37.5l9.5 9.5L51 27.5"/></svg></div><h3 style="font-size:20px;font-weight:700;margin-top:6px">Reserved at ${d.name}</h3><p class="muted" style="max-width:340px">Show this code at the counter. We've sent it to your WhatsApp with directions.</p><div class="qr">${qrSvg()}</div><b class="mono" style="font-size:18px;letter-spacing:.06em">FW-CBE-48213</b><span class="tag fit">Ready by 4:30 PM · held until 8:30 PM</span><div style="display:flex;gap:8px;margin-top:10px"><button class="btn line sm">${I('navigation')} Directions</button><button class="btn line sm">${I('message-circle')} Message store</button></div></div></div>`);
   $('#sl').onclick = e => { const b = e.target.closest('button'); if (!b || b.disabled) return; $$('#sl button').forEach(x => x.classList.toggle('on', x === b)); };
   $('#addFit').onclick = e => { e.preventDefault(); $('#addFit').setAttribute('aria-checked', $('#addFit .sw').classList.toggle('on')); };
   $('#addFit').onkeydown = e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); $('#addFit').click(); } };
-  const sl = $('#slide'), kn = $('#knob'), fl = $('#sfill'); let x0 = null, max = 0;
-  kn.onpointerdown = e => { x0 = e.clientX; max = sl.offsetWidth - 56; kn.setPointerCapture(e.pointerId); sl.classList.remove('done'); };
-  kn.onpointermove = e => { if (x0 === null) return; const dx = Math.max(0, Math.min(max, e.clientX - x0)); kn.style.left = 4 + dx + 'px'; fl.style.width = 56 + dx + 'px'; };
-  kn.onpointerup = e => { if (x0 === null) return; const dx = e.clientX - x0; x0 = null; sl.classList.add('done');
-    if (dx > max * .85) { kn.style.left = 4 + max + 'px'; fl.style.width = '100%'; setTimeout(() => { $('#rf').style.display = 'none'; $('#done').classList.add('on'); toast('Reserved. Code <span class="mono">FW-CBE-48213</span> sent to WhatsApp'); }, 250); }
-    else { kn.style.left = '4px'; fl.style.width = '56px'; } };
+  const sl = $('#slide'), kn = $('#knob'), fl = $('#sfill'), lb = $('#slbl'), tx = $('#slbl span'); let x0 = null, max = 0, done = false, t0 = 0, tw = 1;
+  // the label stays whole until the knob reaches it, then is wiped and fades as the knob crosses it
+  const at = dx => {
+    const edge = 52 + dx; kn.style.left = 4 + dx + 'px'; fl.style.width = 56 + dx + 'px';
+    lb.style.clipPath = `inset(0 0 0 ${edge}px)`; lb.style.opacity = 1 - Math.min(1, Math.max(0, (edge - t0) / tw));
+  };
+  const finish = () => {
+    if (done) return; done = true; x0 = null; max = max || sl.offsetWidth - 56; sl.classList.add('done', 'ok'); at(max); fl.style.width = '100%';
+    kn.innerHTML = I('check'); navigator.vibrate?.(18);
+    setTimeout(() => { $('#rf').style.display = 'none'; $('#done').classList.add('on'); }, 160); // straight to the success screen, which is the confirmation; no toast on top
+  };
+  // drag tracking: the last position and speed come from the move events (a fast trackpad drag can end with a
+  // stale or cancelled release), and a quick flick completes it even if it stops short of the end
+  let last = 0, lt = 0, vel = 0, pid = null;
+  const release = e => {
+    if (x0 === null) return; x0 = null; pid = null; sl.classList.remove('drag'); sl.classList.add('done');
+    if (e && e.timeStamp - lt > 120) vel = 0;   // held still before letting go: not a flick
+    if (last >= max * .7 || (vel > .9 && last >= max * .3)) finish(); else at(0);
+  };
+  kn.onpointerdown = e => {
+    if (done) return; e.preventDefault(); x0 = e.clientX; pid = e.pointerId; last = 0; vel = 0; lt = e.timeStamp;
+    max = sl.offsetWidth - 56; t0 = tx.offsetLeft; tw = tx.offsetWidth;
+    try { kn.setPointerCapture(e.pointerId); } catch { /* released already */ }
+    sl.classList.remove('done'); sl.classList.add('drag');
+  };
+  kn.onpointermove = e => {
+    if (x0 === null || e.pointerId !== pid) return;
+    const dx = Math.max(0, Math.min(max, e.clientX - x0)), dt = Math.max(1, e.timeStamp - lt);
+    vel = vel * .5 + ((dx - last) / dt) * .5; last = dx; lt = e.timeStamp; at(dx);
+    if (dx >= max) finish();   // reaching the end completes at once, no need to release
+  };
+  kn.onpointerup = release; kn.onpointercancel = release; kn.onlostpointercapture = release;
+  kn.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); finish(); } };
 }
 function qrSvg() {
   let s = ''; for (let y = 0; y < 25; y++) for (let x = 0; x < 25; x++) { if ((x < 8 && y < 8) || (x > 16 && y < 8) || (x < 8 && y > 16)) continue; if ((x * 7 + y * 13 + x * y * 3) % 5 < 2) s += `<rect x="${x}" y="${y}" width="1" height="1"/>`; }
@@ -944,3 +984,5 @@ syncGarage();
 const start = (location.hash || '#home').slice(1);
 go(['home', 'plp', 'pdp'].includes(start) ? start : 'home');
 if (params.get('ask')) setTimeout(() => openCopilot(params.get('ask')), 500);
+// ?compare=d1,d6,d2 opens the compare drawer with those products (used by the case study)
+if (params.get('compare')) setTimeout(() => { S.compare = params.get('compare').split(',').filter(id => P(id)).slice(0, 3); go('plp'); renderTray(); if (S.compare.length > 1) openCompare(); }, 600);
