@@ -1,0 +1,12 @@
+{
+  "name": "fitwise",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prototype": "python3 src/build.py",
+    "stats:build": "cd stats-app && pnpm install && pnpm build"
+  },
+  "dependencies": {
+    "@vercel/blob": "^2.8.1"
+  }
+}

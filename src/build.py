@@ -28,6 +28,7 @@ html=f'''<!doctype html>
 <script type="text/template" id="shell">
 {shell}
 </script>
+<script src="assets/fw-track.js"></script>
 <script src="assets/map/coimbatore.js"></script>
 <script>
 {js}

@@ -1,0 +1,43 @@
+{
+  "redirects": [
+    {
+      "source": "/stats",
+      "destination": "/track",
+      "permanent": false
+    },
+    {
+      "source": "/stats/(.*)",
+      "destination": "/track",
+      "permanent": false
+    }
+  ],
+  "headers": [
+    {
+      "source": "/track",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    },
+    {
+      "source": "/track/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    }
+  ]
+}

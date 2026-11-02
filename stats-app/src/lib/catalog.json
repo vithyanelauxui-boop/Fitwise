@@ -1,0 +1,111 @@
+{
+ "products": {
+  "d1": {
+   "cat": "brakes",
+   "name": "Bosch Front Brake Disc Rotor, Ventilated (Pair)"
+  },
+  "d2": {
+   "cat": "brakes",
+   "name": "Hyundai Mobis Genuine Front Brake Disc (Pair)"
+  },
+  "d3": {
+   "cat": "brakes",
+   "name": "Brembo Max Slotted Front Brake Disc (Pair)"
+  },
+  "d4": {
+   "cat": "brakes",
+   "name": "Brembo Xtra Cross-Drilled Front Brake Disc (Pair)"
+  },
+  "d5": {
+   "cat": "brakes",
+   "name": "TVS Girling Front Brake Disc, Ventilated (Pair)"
+  },
+  "d6": {
+   "cat": "brakes",
+   "name": "Vrom Select Drilled & Slotted Front Disc (Pair)"
+  },
+  "d7": {
+   "cat": "brakes",
+   "name": "Rane Sport Cross-Drilled Front Disc (Pair)"
+  },
+  "d8": {
+   "cat": "brakes",
+   "name": "Valeo Curved Drilled & Slotted Disc, 17-inch (Pair)"
+  },
+  "d9": {
+   "cat": "brakes",
+   "name": "Brembo Front Brake Disc for Verna 1.5 (Pair)"
+  },
+  "t1": {
+   "cat": "tyres",
+   "name": "MRF Wanderer Street 205/65 R16 95H"
+  },
+  "t2": {
+   "cat": "tyres",
+   "name": "Michelin Primacy 4 ST 205/65 R16 95H"
+  },
+  "t3": {
+   "cat": "tyres",
+   "name": "Apollo Alnac 4G 205/65 R16 95V"
+  },
+  "t4": {
+   "cat": "tyres",
+   "name": "CEAT CrossDrive AT 205/65 R16 95H"
+  },
+  "t5": {
+   "cat": "tyres",
+   "name": "JK Tyre UX Royale 205/65 R16 95H"
+  },
+  "t6": {
+   "cat": "tyres",
+   "name": "Bridgestone Ecopia EP150 205/65 R16 95H"
+  },
+  "t10": {
+   "cat": "tyres",
+   "name": "MRF Wanderer Street 215/60 R17 96H"
+  },
+  "t11": {
+   "cat": "tyres",
+   "name": "Apollo Alnac 4G 215/60 R17 96V"
+  },
+  "t7": {
+   "cat": "tyres",
+   "name": "MRF Shakti Super 13.6-28 Rear Tractor Tyre"
+  },
+  "t8": {
+   "cat": "tyres",
+   "name": "BKT Commander 13.6-28 Rear Tractor Tyre"
+  },
+  "t9": {
+   "cat": "tyres",
+   "name": "Apollo EnduRace RD 295/80 R22.5 Drive Tyre"
+  },
+  "k1": {
+   "cat": "tracks",
+   "name": "Vrom TrakPro Rubber Track 300 \u00d7 52.5 \u00d7 80, Block tread"
+  },
+  "k2": {
+   "cat": "tracks",
+   "name": "Bridgestone Rubber Track 300 \u00d7 52.5 \u00d7 80, Zig-zag"
+  },
+  "k3": {
+   "cat": "tracks",
+   "name": "JCB Genuine Rubber Track 300 \u00d7 52.5 \u00d7 80"
+  },
+  "k4": {
+   "cat": "tracks",
+   "name": "Vrom TrakPro Rubber Track 300 \u00d7 52.5 \u00d7 84, Block tread"
+  }
+ },
+ "categories": {
+  "brakes": "Front Brake Discs",
+  "tyres": "Tyres",
+  "tracks": "Rubber Tracks"
+ },
+ "vehicles": {
+  "creta": "Hyundai Creta",
+  "m575": "Mahindra 575 DI",
+  "signa": "Tata Signa 4825.TK",
+  "jcb": "JCB 30 Plus"
+ }
+}
