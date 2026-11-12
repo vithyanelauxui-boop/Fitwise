@@ -339,15 +339,21 @@ function mountMap(el, list, sel, price) {
   const auto = fitZ(), z = el._z || auto, s = list.find(d => d.id === sel);
   const p = pts.map(d => proj(d, z)), xs = p.map(q => q[0]), ys = p.map(q => q[1]);
   const [cx, cy] = el._z && el._z > auto && s ? proj(s, z) : [(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...ys) + Math.max(...ys)) / 2 + 22];
-  const ox = W / 2 - cx, oy = H / 2 - cy, at = d => { const [x, y] = proj(d, z); return [x + ox, y + oy]; };
+  const ox = W / 2 - cx, oy = H / 2 - cy;
+  /* partner stores show an approximate area (pin nudged ~250 m, soft circle); the exact pin and address come with the booking code. Vrom's own hub is exact. */
+  const mpp = 156543.03 * Math.cos(11 * Math.PI / 180) / 2 ** z, jit = d => { if (!d.id || d.own) return [0, 0]; const h = [...d.id].reduce((a, c) => a * 31 + c.charCodeAt(0), 7); return [Math.cos(h) * 250 / mpp, Math.sin(h) * 250 / mpp]; };
+  const at = d => { const [x, y] = proj(d, z), [jx, jy] = jit(d); return [x + ox + jx, y + oy + jy]; };
+  const R = Math.round(450 / mpp);
   const [mx, my] = at(ME), [sx, sy] = s ? at(s) : [mx, my];
   const pins = list.map((d, i) => { const [x, y] = at(d), lbl = `${d.name}, ${d.area}, ${d.km} km, ${d.stock ? 'in stock' : 'ready tomorrow'}`;
     return `<button class="pin ${d.id === sel ? 'on' : ''} ${d.stock ? '' : 'out'} ${d.own ? 'own' : ''}" data-pin="${d.id}" style="left:${x}px;top:${y}px" aria-label="${lbl}" aria-pressed="${d.id === sel}"><i class="st"></i><b class="pp">${price ? fmt(price(d)) : d.km + ' km'}</b><span class="pl"><b>${d.own ? 'Vrom Hub' : d.name}</b><small>${price ? d.km + ' km · ' : ''}${d.stock ? 'In stock' : 'Ready tomorrow'}</small></span></button>`; }).join('');
   el.innerHTML = `${baseMap(W, H, z, ox, oy, 'rl' + (el.id || 'm') + '-')}
     ${s ? `<svg class="route" width="${W}" height="${H}" aria-hidden="true"><line x1="${mx}" y1="${my}" x2="${sx}" y2="${sy}"/></svg>` : ''}
+    ${list.filter(d => !d.own).map(d => { const [x, y] = at(d); return `<i class="area ${d.id === sel ? 'on' : ''}" style="left:${x}px;top:${y}px;width:${R * 2}px;height:${R * 2}px"></i>`; }).join('')}
     <span class="me" style="left:${mx}px;top:${my}px"><i></i><b>You · ${ME.pin}</b></span>${pins}
     <div class="mctl" role="group" aria-label="Map zoom"><button data-mz="1" aria-label="Zoom in" ${z >= 16 ? 'disabled' : ''}>${I('plus')}</button><button data-mz="-1" aria-label="Zoom out" ${z <= 12 ? 'disabled' : ''}>${I('minus')}</button><button data-mz="0" aria-label="Show all stores" ${z === auto ? 'disabled' : ''}>${I('scan')}</button></div>
-    ${W < 520 && s ? `<div class="msel"><span class="pn ${s.own ? 'own' : ''} ${s.stock ? '' : 'out'}">${list.indexOf(s) + 1}</span><span><b>${s.name}</b><small>${price ? fmt(price(s)) + ' · ' : ''}${s.km} km · ${s.stock ? 'In stock' : 'Ready tomorrow'}</small></span></div>` : `<div class="mleg">${W < 520 ? '<span><i class="me-i"></i>You</span>' : ''}<span><i></i>In stock</span><span><i class="no"></i>Ready tomorrow</span></div>`}
+    ${W < 520 && s ? `<div class="msel"><span class="pn ${s.own ? 'own' : ''} ${s.stock ? '' : 'out'}">${list.indexOf(s) + 1}</span><span><b>${s.name}</b><small>${price ? fmt(price(s)) + ' · ' : ''}${s.km} km · ${s.stock ? 'In stock' : 'Ready tomorrow'}</small></span></div>` : `<div class="mleg">${W < 520 ? '<span><i class="me-i"></i>You</span>' : ''}<span><i></i>In stock</span><span><i class="no"></i>Ready tomorrow</span><span><i class="ar"></i>Approximate area</span></div>`}
+    <span class="mnote">${I('map-pin')}Exact address and directions come with your booking code</span>
     <span class="attr">© OpenStreetMap contributors</span>`;
   el.classList.toggle('compact', W < 520);
   el._list = list; el._sel = sel; el._price = price;
@@ -811,7 +817,7 @@ function renderPDP() {
   <nav class="subnav" id="subnav"><div class="in"><a href="#stores" class="on">Stores near you</a><a href="#fbt">Bought together</a><a href="#details">Details</a><a href="#compat">Compatibility</a><a href="#reviews">Reviews</a><a href="#qa">Questions</a></div></nav>
 
   <section class="psec" id="stores">
-    <h2>Stores near you</h2><p class="s">Live stock around 641018. Reserve now and pay at the store. We hold it for 4 hours.</p>
+    <h2>Stores near you</h2><p class="s">Live stock around 641018. Reserve on Vrom and the store holds it for you at this price, with your fit promise. Pay at the store.</p>
     <div class="stores">
       <div class="slist">
         <div class="shead"><div class="seg" id="sseg">${[['near', 'Nearest in stock'], ['price', 'Lowest price'], ['open', 'Open now'], ['fit', 'Fits it for you']].map(([k, t]) => `<button class="${S.ssort === k ? 'on' : ''}" data-ss="${k}">${t}</button>`).join('')}</div><span class="muted" style="font-size:12.5px">${stores.length} stores within ${Math.ceil(Math.max(...stores.map(d => d.km)))} km</span></div>
@@ -827,7 +833,8 @@ function renderPDP() {
           </button>
           <div class="sc-b" id="scb-${d.id}"><div class="sc-bi">
             <div class="sc-m"><span>${I('star')}${d.rating} <small>(${d.reviews})</small></span>${d.closing ? '' : `<span class="ok">${d.open}</span>`}${d.fit ? `<span>${I('wrench')}Can fit it</span>` : ''}</div>
-            <div class="sc-x"><button class="btn ${d.stock ? 'sun' : 'line'} sm" aria-label="${d.stock ? 'Reserve' : 'Order to store'} at ${d.name}" data-resv="${d.id}">${d.stock ? 'Reserve' : 'Order to store'}</button><button class="ib" aria-label="Call ${d.name}" title="Call">${I('phone')}</button><button class="ib" aria-label="WhatsApp ${d.name}" title="WhatsApp">${I('message-circle')}</button><button class="ib" aria-label="Directions to ${d.name}" title="Directions">${I('navigation')}</button></div>
+            <div class="sc-x"><button class="btn ${d.stock ? 'sun' : 'line'} sm" aria-label="${d.stock ? 'Reserve' : 'Order to store'} at ${d.name}" data-resv="${d.id}">${d.stock ? 'Reserve' : 'Order to store'}</button><button class="ib" aria-label="Call ${d.name} through Vrom" title="Call through Vrom (your number stays private)">${I('phone')}</button><button class="ib" aria-label="Chat with ${d.name} through Vrom" title="Chat through Vrom">${I('message-circle')}</button>${d.own ? `<button class="ib" aria-label="Directions to ${d.name}" title="Directions">${I('navigation')}</button>` : ''}</div>
+            <p class="sc-via">${I('shield-check')}${d.own ? `${d.addr}. Vrom's own store.` : 'Exact address and directions come with your booking code. Calls and chats go through Vrom.'}</p>
           </div></div></article>`; }).join('')}
       </div>
       <div class="mapbox" id="pmap" aria-label="Map of stores near ${ME.pin}"></div>
@@ -926,16 +933,38 @@ function addHots() {
 function openReserve(p) {
   const dl = dealersFor(p), d = dl.find(x => x.id === S.store && x.stock) || dl[0]; S.store = d.id;
   const pr = Math.round(p.price * d.factor / 10) * 10, fit = S.ful === 'fit', f = fitOf(p), ty = ptype(p);
+  const tok = d.stock === 1 || pr * S.qty >= 8000;
   const lab = p.cat === 'brakes' ? 'About 45 minutes · ₹349 labour' : p.cat === 'tracks' ? 'Crew on site · 2 to 3 hours · ₹4,500' : ty === 'tractor' ? 'On the farm · about 40 minutes a tyre · ₹900' : ty === 'truck' ? 'About 30 minutes a tyre · ₹1,200' : 'About 25 minutes · ₹600 with balancing';
-  openDrawer(`<div class="dr-h"><div><h3>${fit ? 'Book fitting' : 'Reserve at store'}</h3><small>Pay at the store. Nothing to pay now.</small></div><button class="x" data-close aria-label="Close">${I('x')}</button></div>
+  openDrawer(`<div class="dr-h"><div><h3>${fit ? 'Book fitting' : 'Reserve at store'}</h3><small>${tok ? 'Held until an hour after your pickup time. ₹99 token now, the rest at the counter.' : 'Held until an hour after your pickup time. Pay at the counter.'}</small></div><button class="x" data-close aria-label="Close">${I('x')}</button></div>
   <div class="dr-b"><div class="resv" id="rf">
     <div class="sum"><span class="th">${img(p)}</span><div style="flex:1;min-width:0"><b style="font-weight:600">${p.brand} ${p.name}</b><div style="font-size:12.5px;color:var(--${f === 'ok' ? 'fit' : f});font-weight:600;margin-top:2px">${f === 'ok' ? 'Fits your ' + vLabel(V()) : f === 'warn' ? 'Check fit before you collect' : 'Doesn\'t fit your ' + vLabel(V())}</div></div><b>${fmt(pr * S.qty)}</b></div>
-    <div><h5>Store</h5><div class="store on" style="cursor:default"><div class="n"><b>${d.name}</b></div><div class="pr"><small>${d.km} km</small></div><div class="m"><span>${I('map-pin')}${d.area}</span><span class="ok">${d.open}</span></div></div></div>
+    <div><h5>Store</h5><div class="store on" style="cursor:default"><div class="n"><b>${d.name}</b></div><div class="pr"><small>${d.km} km</small></div><div class="m"><span>${I('map-pin')}${d.own ? d.addr : d.area}</span><span class="ok">${d.open}</span></div>${d.own ? '' : `<small class="rv-addr">Exact address and directions are sent with your booking code</small>`}</div></div>
     <div><h5>${fit ? 'Fitting slot' : 'Pick up by'}, today</h5><div class="slots-t" id="sl">${['3:00 PM', '4:30 PM', '5:30 PM', '6:30 PM', '7:30 PM', 'Tomorrow 10 AM', 'Tomorrow 12 PM', 'Tomorrow 4 PM'].map((s, i) => `<button ${i ? '' : 'disabled'} class="${i === 1 ? 'on' : ''}">${s}</button>`).join('')}</div></div>
     <label class="swl" id="addFit" role="switch" aria-checked="${fit}" tabindex="0" style="justify-content:space-between;padding:12px 14px;border-radius:12px;box-shadow:inset 0 0 0 1px var(--line)"><span><b style="font-weight:600">Get it fitted at the store</b><div class="muted" style="font-weight:400;font-size:12.5px">${lab}</div></span><span class="sw ${fit ? 'on' : ''}"></span></label>
-    <div class="slider" id="slide"><div class="fill" id="sfill"></div><div class="lbl" id="slbl"><span>Slide to reserve</span></div><div class="knob" id="knob" role="button" tabindex="0" aria-label="Slide to reserve, or press Enter">${I('chevrons-right')}</div></div>
+    <ul class="rv-why">
+      <li>${I('shield-check')}<span><b>Fit promise</b> Free return if it doesn't fit your ${vLabel(V())}</span></li>
+      <li>${I('indian-rupee')}<span><b>Price locked at ${fmt(pr * S.qty)}</b> No counter price, no haggling</span></li>
+      <li>${I('calendar-clock')}<span><b>Can't make it?</b> Reschedule or cancel on WhatsApp. We remind you an hour before.</span></li>
+    </ul>
+    ${tok ? `<div class="rv-tok">${I('indian-rupee')}<span><b>₹99 refundable token</b> ${d.stock === 1 ? 'This is the last one in stock' : 'High-value part'}, so the store keeps it only for you. Taken off your bill at the counter. Kept only if you don't turn up.</span></div>` : ''}
+    <div class="slider" id="slide"><div class="fill" id="sfill"></div><div class="lbl" id="slbl"><span>${tok ? 'Slide to pay ₹99 and reserve' : 'Slide to reserve'}</span></div><div class="knob" id="knob" role="button" tabindex="0" aria-label="Slide to reserve, or press Enter">${I('chevrons-right')}</div></div>
+    <p class="rv-pol">Not coming? Cancel in one tap so the store can sell it to someone else. If the hold ends without a pickup, it counts as a missed pickup. After 2 missed pickups, reservations need a ₹99 refundable token.</p>
   </div>
-  <div class="done-st" id="done"><div class="ck-anim" aria-hidden="true"><span class="burst">${Array.from({ length: 12 }, (_, i) => `<i style="--a:${i * 30}deg;--d:${i % 2 ? 34 : 48}px"></i>`).join('')}</span><svg viewBox="0 0 72 72"><circle class="ring" cx="36" cy="36" r="33"/><circle class="disc" cx="36" cy="36" r="33"/><path class="tick" d="M22 37.5l9.5 9.5L51 27.5"/></svg></div><h3 style="font-size:20px;font-weight:700;margin-top:6px">Reserved at ${d.name}</h3><p class="muted" style="max-width:340px">Show this code at the counter. We've sent it to your WhatsApp with directions.</p><div class="qr">${qrSvg()}</div><b class="mono" style="font-size:18px;letter-spacing:.06em">FW-CBE-48213</b><span class="tag fit">Ready by 4:30 PM · held until 8:30 PM</span><div style="display:flex;gap:8px;margin-top:10px"><button class="btn line sm">${I('navigation')} Directions</button><button class="btn line sm">${I('message-circle')} Message store</button></div></div></div>`);
+  <div class="done-st" id="done"><div class="ck-anim" aria-hidden="true"><span class="burst">${Array.from({ length: 12 }, (_, i) => `<i style="--a:${i * 30}deg;--d:${i % 2 ? 34 : 48}px"></i>`).join('')}</span><svg viewBox="0 0 72 72"><circle class="ring" cx="36" cy="36" r="33"/><circle class="disc" cx="36" cy="36" r="33"/><path class="tick" d="M22 37.5l9.5 9.5L51 27.5"/></svg></div><h3 style="font-size:20px;font-weight:700;margin-top:6px">Reserved at ${d.name}</h3><p class="muted" style="max-width:360px">Show this code at the counter. <b style="color:var(--ink);font-weight:600">Your fit promise, price and warranty are tied to this code.</b></p><div class="qr">${qrSvg()}</div><b class="mono" style="font-size:18px;letter-spacing:.06em">FW-CBE-48213</b><span class="tag fit" id="rvTag">Ready by 4:30 PM · held until 5:30 PM</span>
+  <div class="rv-loc">${I('map-pin')}<span><b>${d.addr}</b>${d.km} km · ${d.open}</span></div>
+  <ol class="rv-steps"><li><b>At the counter</b>The store scans your code</li><li><b>You pay ${fmt(pr * S.qty)}</b>${tok ? 'Your ₹99 token comes off the bill' : 'The price you reserved at'}</li><li><b>Saved to My Garage</b>Bill, warranty and fit promise</li></ol>
+  <p class="muted rv-wa">${I('message-circle')}<span>Code and directions sent to your WhatsApp.</span></p>
+  <div class="rv-rem"><small>WhatsApp reminder, <span id="rvRemT">3:30 PM</span></small><p>Your ${p.brand} ${p.name.split(',')[0]} is ready at ${d.name}. Still coming?</p><div><span>Yes, on my way</span><span>Reschedule</span><span>Cancel</span></div></div>
+  <p class="rv-pol" style="text-align:center;max-width:380px">If you don't come by <b id="rvEnd">5:30 PM</b>, the hold ends and ${d.name} can sell it again${tok ? '. Your ₹99 token goes to the store for holding it' : ''}.</p>
+  <div class="rv-slots" id="rvSlots" hidden>${['5:30 PM', '6:30 PM', '7:30 PM', 'Tomorrow 10 AM', 'Tomorrow 12 PM', 'Tomorrow 4 PM'].map(s => `<button>${s}</button>`).join('')}</div>
+  <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap;justify-content:center"><button class="btn line sm">${I('navigation')} Directions</button><button class="btn line sm" id="rvRes">${I('calendar-clock')} Reschedule</button><button class="btn line sm" id="rvCan">Cancel</button></div></div>
+  <div class="done-st" id="cxl"><div class="rv-cx">${I('x')}</div><h3 style="font-size:20px;font-weight:700">Reservation cancelled</h3><p class="muted" style="max-width:340px">Thanks for letting us know. ${d.name} can sell it to someone else now.${tok ? ' Your ₹99 token is on its way back to you.' : ''} No missed pickup counted.</p><button class="btn line sm" data-close>Close</button></div></div>`);
+  /* the hold lasts until an hour after the chosen pickup time; reminder goes out an hour before */
+  const shift = (s, h) => { const m = s.match(/(\d+)(?::(\d+))? (AM|PM)/); let hr = (+m[1] % 12) + (m[3] === 'PM' ? 12 : 0) + h; const mm = m[2] || '00', pre = s.startsWith('Tomorrow') ? 'tomorrow ' : ''; return `${pre}${(hr + 11) % 12 + 1}${mm === '00' ? '' : ':' + mm} ${hr >= 12 ? 'PM' : 'AM'}`; };
+  const setSlot = s => { const ready = s.replace('Tomorrow', 'tomorrow'); $('#rvTag').textContent = `Ready by ${ready} · held until ${shift(s, 1)}`; $('#rvEnd').textContent = shift(s, 1); $('#rvRemT').textContent = shift(s, -1); };
+  $('#rvRes').onclick = () => { const sl = $('#rvSlots'); sl.hidden = !sl.hidden; };
+  $('#rvSlots').onclick = e => { const b = e.target.closest('button'); if (!b) return; setSlot(b.textContent); $('#rvSlots').hidden = true; toast(`Moved to ${b.textContent.replace('Tomorrow', 'tomorrow')}. ${d.name} has been told.`); };
+  $('#rvCan').onclick = () => { $('#done').classList.remove('on'); $('#cxl').classList.add('on'); };
   $('#sl').onclick = e => { const b = e.target.closest('button'); if (!b || b.disabled) return; $$('#sl button').forEach(x => x.classList.toggle('on', x === b)); };
   $('#addFit').onclick = e => { e.preventDefault(); $('#addFit').setAttribute('aria-checked', $('#addFit .sw').classList.toggle('on')); };
   $('#addFit').onkeydown = e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); $('#addFit').click(); } };
@@ -948,7 +977,7 @@ function openReserve(p) {
   const finish = () => {
     if (done) return; done = true; x0 = null; max = max || sl.offsetWidth - 56; sl.classList.add('done', 'ok'); at(max); fl.style.width = '100%';
     kn.innerHTML = I('check'); navigator.vibrate?.(18);
-    setTimeout(() => { $('#rf').style.display = 'none'; $('#done').classList.add('on'); }, 160); // straight to the success screen, which is the confirmation; no toast on top
+    setTimeout(() => { const on = $('#sl button.on'); if (on) setSlot(on.textContent); $('#rf').style.display = 'none'; $('#done').classList.add('on'); }, 160); // straight to the success screen, which is the confirmation; no toast on top
   };
   // drag tracking: the last position and speed come from the move events (a fast trackpad drag can end with a
   // stale or cancelled release), and a quick flick completes it even if it stops short of the end

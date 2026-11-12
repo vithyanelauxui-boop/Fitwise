@@ -46,18 +46,18 @@ const PRODUCTS = [
 ];
 
 const DEALERS = [
-  {id:'s4',name:'Vrom Hub, Avinashi Road',area:'Lakshmi Mills',rating:4.8,reviews:1204,open:'Open until 10 PM',stock:14,factor:1,fit:true,own:true,lat:11.0112,lon:76.9868},
-  {id:'s1',name:'Sri Murugan Auto Spares',area:'Gandhipuram',rating:4.7,reviews:318,open:'Open until 9 PM',stock:6,factor:1,fit:true,lat:11.0178,lon:76.9668},
-  {id:'s2',name:'KG Motors & Brakes',area:'RS Puram',rating:4.6,reviews:211,open:'Open until 8 PM',stock:2,factor:.99,fit:true,lat:11.0091,lon:76.9502},
-  {id:'s3',name:'Lakshmi Car Care',area:'Saibaba Colony',rating:4.5,reviews:176,open:'Open until 8:30 PM',stock:9,factor:1.03,fit:true,lat:11.0262,lon:76.9447},
-  {id:'s5',name:'Velan Spares',area:'Ukkadam',rating:4.3,reviews:94,open:'Closes at 7 PM',closing:true,stock:0,factor:.97,fit:false,lat:10.9908,lon:76.961}
+  {id:'s4',addr:'412 Avinashi Road, Lakshmi Mills, Coimbatore',name:'Vrom Hub, Avinashi Road',area:'Lakshmi Mills',rating:4.8,reviews:1204,open:'Open until 10 PM',stock:14,factor:1,fit:true,own:true,lat:11.0112,lon:76.9868},
+  {id:'s1',addr:'27 Cross Cut Road, Gandhipuram, Coimbatore',name:'Sri Murugan Auto Spares',area:'Gandhipuram',rating:4.7,reviews:318,open:'Open until 9 PM',stock:6,factor:1,fit:true,lat:11.0178,lon:76.9668},
+  {id:'s2',addr:'88 DB Road, RS Puram, Coimbatore',name:'KG Motors & Brakes',area:'RS Puram',rating:4.6,reviews:211,open:'Open until 8 PM',stock:2,factor:.99,fit:true,lat:11.0091,lon:76.9502},
+  {id:'s3',addr:'14 NSR Road, Saibaba Colony, Coimbatore',name:'Lakshmi Car Care',area:'Saibaba Colony',rating:4.5,reviews:176,open:'Open until 8:30 PM',stock:9,factor:1.03,fit:true,lat:11.0262,lon:76.9447},
+  {id:'s5',addr:'6 Big Bazaar Street, Ukkadam, Coimbatore',name:'Velan Spares',area:'Ukkadam',rating:4.3,reviews:94,open:'Closes at 7 PM',closing:true,stock:0,factor:.97,fit:false,lat:10.9908,lon:76.961}
 ];
 /* heavy parts (tractor and truck tyres, tracks) come from a different trade: farm, truck and earthmover dealers */
 const DEALERS_HEAVY = [
-  {id:'h4',name:'Vrom Hub, Avinashi Road',area:'Lakshmi Mills',rating:4.8,reviews:1204,open:'Open until 10 PM',stock:3,factor:1,fit:true,own:true,lat:11.0112,lon:76.9868},
-  {id:'h1',name:'Kovai Earthmover Spares',area:'Ganapathy',rating:4.6,reviews:142,open:'Open until 8 PM',stock:2,factor:.98,fit:true,lat:11.0402,lon:76.9792},
-  {id:'h2',name:'Sakthi Tractors & Implements',area:'Selvapuram',rating:4.5,reviews:388,open:'Open until 7:30 PM',stock:4,factor:1.02,fit:true,lat:10.9858,lon:76.9432},
-  {id:'h3',name:'Coimbatore Truck Tyre House',area:'Ramanathapuram',rating:4.4,reviews:97,open:'Closes at 7 PM',closing:true,stock:0,factor:.97,fit:false,lat:10.9978,lon:76.9925}
+  {id:'h4',addr:'412 Avinashi Road, Lakshmi Mills, Coimbatore',name:'Vrom Hub, Avinashi Road',area:'Lakshmi Mills',rating:4.8,reviews:1204,open:'Open until 10 PM',stock:3,factor:1,fit:true,own:true,lat:11.0112,lon:76.9868},
+  {id:'h1',addr:'210 Sathy Road, Ganapathy, Coimbatore',name:'Kovai Earthmover Spares',area:'Ganapathy',rating:4.6,reviews:142,open:'Open until 8 PM',stock:2,factor:.98,fit:true,lat:11.0402,lon:76.9792},
+  {id:'h2',addr:'52 Perur Main Road, Selvapuram, Coimbatore',name:'Sakthi Tractors & Implements',area:'Selvapuram',rating:4.5,reviews:388,open:'Open until 7:30 PM',stock:4,factor:1.02,fit:true,lat:10.9858,lon:76.9432},
+  {id:'h3',addr:'31 Trichy Road, Ramanathapuram, Coimbatore',name:'Coimbatore Truck Tyre House',area:'Ramanathapuram',rating:4.4,reviews:97,open:'Closes at 7 PM',closing:true,stock:0,factor:.97,fit:false,lat:10.9978,lon:76.9925}
 ];
 /* shopper's location: PIN 641018, central Coimbatore. Distances are computed from coordinates so list and map always agree */
 const ME = {lat:11.0021,lon:76.9649,pin:'641018'};
